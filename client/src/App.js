@@ -1,22 +1,46 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { todoURL } from "./endpoints";
 
 function App() {
-  console.log(todoURL);
-  var todos = 'todos';
-  useEffect(() => {
+  const [Data, setData] = useState();
+  
+  const fetchData = () => {
     axios.get("https://localhost:4000/api/Todo").then((response) => {
-      console.log(todos);
+      setData(response.data);
     });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   return (
     <>
       <h1>My React App</h1>
       <p>Communicated with ASP.NET Core</p>
-      {todos}
+      <table>
+        <thead>
+          <tr>
+            <td>ID</td>
+            <td>USER ID</td>
+            <td>TITLE</td>
+            <td>DESCRIPTION</td>
+          </tr>
+        </thead>
+        <tbody>
+          {Data &&
+            Data.map((item, key) => (
+              <tr key={key}>
+                <td>{item.id}</td>
+                <td>{item.userId}</td>
+                <td>{item.title}</td>
+                <td>{item.description}</td>
+              </tr>
+            ))}
+          <tr></tr>
+        </tbody>
+      </table>
     </>
   );
 }
